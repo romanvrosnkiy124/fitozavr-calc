@@ -8,15 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* === ЦВЕТОВЫЕ НАСТРОЙКИ === */
-            
-            /* Фон всей страницы: БЕЛЫЙ */
+            /* ЦВЕТА */
             --bg-color: var(--tg-theme-bg-color, #ffffff);
-            
-            /* Фон карточек: ВАШ НОВЫЙ СВЕТЛО-ГОЛУБОЙ (rgb 252, 254, 255) */
             --card-bg: var(--tg-theme-secondary-bg-color, rgb(252, 254, 255));
-            
-            /* Остальные цвета */
             --text-color: var(--tg-theme-text-color, #000000);
             --hint-color: var(--tg-theme-hint-color, #8e8e93);
             --button-color: var(--tg-theme-button-color, #3390ec);
@@ -28,18 +22,13 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0; padding: 15px;
+            padding-bottom: 40px; /* Отступ снизу */
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 14px;
-            padding: 16px; 
-            margin-bottom: 12px;
-            
-            /* Т.к. фон очень светлый, делаем границу чуть заметнее (5% черного) */
-            border: 1px solid rgba(0,0,0,0.05);
-            /* И добавляем микро-тень для объема */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border-radius: 14px; padding: 16px; margin-bottom: 12px;
+            border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         h2, h3 { margin-top: 0; margin-bottom: 8px; font-weight: 700; }
@@ -47,19 +36,12 @@
         h3 { font-size: 17px; opacity: 0.95; }
         p { color: var(--hint-color); margin: 0; font-size: 15px; }
 
-        /* Прогресс бары */
         .stat-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 15px; font-weight: 500;}
         .progress-bar { height: 8px; background: rgba(0, 0, 0, 0.05); border-radius: 4px; overflow: hidden; margin-top: 5px; }
         .progress-fill { height: 100%; transition: width 0.8s ease-out; }
 
-        /* Список еды */
         .food-list { list-style: none; padding: 0; margin: 0; }
-        .food-item { 
-            display: flex; justify-content: space-between; 
-            padding: 10px 0; 
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04); 
-            font-size: 15px;
-        }
+        .food-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.04); font-size: 15px; }
         .food-item:last-child { border-bottom: none; }
         .food-cals { font-weight: 600; color: var(--hint-color); }
 
@@ -69,7 +51,14 @@
             text-align: center; border-radius: 12px; font-weight: 600;
             border: none; cursor: pointer; font-size: 17px; margin-top: 15px;
         }
-        .btn:active { opacity: 0.8; transform: scale(0.98); transition: 0.1s; }
+        .btn:active { opacity: 0.8; transform: scale(0.98); }
+
+        /* Стиль для второстепенной кнопки (PDF) */
+        .btn-secondary {
+            background: transparent;
+            color: var(--button-color);
+            border: 2px solid var(--button-color);
+        }
     </style>
 </head>
 <body>
@@ -109,12 +98,20 @@
         </ul>
     </div>
 
+    <!-- КНОПКИ -->
+    <button class="btn btn-secondary" id="pdfBtn">📜 Скачать PDF отчет</button>
     <button class="btn" onclick="Telegram.WebApp.close()">Закрыть</button>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
+
+        // ОБРАБОТКА КНОПКИ PDF
+        document.getElementById('pdfBtn').addEventListener('click', function(){
+            // Отправляем боту команду "generate_pdf"
+            tg.sendData("generate_pdf");
+        });
 
         // 1. Парсинг данных
         const params = new URLSearchParams(window.location.search);
@@ -132,22 +129,20 @@
             mealsHistory = JSON.parse(decodeURIComponent(params.get('meals'))) || [];
         } catch (e) { console.error("JSON Error", e); }
 
-        // 2. Заполнение UI
+        // 2. UI
         document.getElementById('username').innerText = name;
         document.getElementById('goal').innerText = goal;
         document.getElementById('cals_val').innerText = `${cals} / ${maxCals}`;
         document.getElementById('water_val').innerText = `${water} мл`;
 
-        // Анимация
         setTimeout(() => {
             let calsPercent = Math.min((cals / maxCals) * 100, 100);
             document.getElementById('cals_bar').style.width = calsPercent + '%';
-            
             let waterPercent = Math.min((water / 2500) * 100, 100);
             document.getElementById('water_bar').style.width = waterPercent + '%';
         }, 150);
 
-        // 3. Список еды
+        // 3. Еда
         const foodListEl = document.getElementById('food_list');
         if (mealsHistory.length > 0) {
             foodListEl.innerHTML = ''; 
@@ -162,11 +157,9 @@
         // 4. График
         if (weightHistory.length > 0) {
             const ctx = document.getElementById('weightChart').getContext('2d');
-            
             let gradient = ctx.createLinearGradient(0, 0, 0, 300);
             gradient.addColorStop(0, 'rgba(51, 144, 236, 0.4)');
             gradient.addColorStop(1, 'rgba(51, 144, 236, 0.0)');
-
             const labels = weightHistory.map(w => w.d);
             const dataPoints = weightHistory.map(w => w.w);
 
@@ -175,35 +168,23 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Вес',
-                        data: dataPoints,
-                        borderColor: '#3390ec',
-                        backgroundColor: gradient,
-                        borderWidth: 3,
-                        pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#3390ec',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        fill: true,
-                        tension: 0.4
+                        label: 'Вес', data: dataPoints, borderColor: '#3390ec',
+                        backgroundColor: gradient, borderWidth: 3,
+                        pointBackgroundColor: '#ffffff', pointBorderColor: '#3390ec',
+                        pointBorderWidth: 2, pointRadius: 4, fill: true, tension: 0.4
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#8e8e93', font: {size: 11} } },
-                        y: { 
-                            grid: { color: 'rgba(0, 0, 0, 0.04)', borderDash: [5, 5] }, 
-                            ticks: { color: '#8e8e93', font: {size: 11} } 
-                        }
+                        y: { grid: { color: 'rgba(0, 0, 0, 0.04)', borderDash: [5, 5] }, ticks: { color: '#8e8e93', font: {size: 11} } }
                     }
                 }
             });
         } else {
             document.getElementById('weightChart').style.display = 'none';
-            document.querySelector('.card:nth-child(3)').innerHTML += "<p style='text-align:center; padding:10px;'>Нужно больше замеров веса ⚖️</p>";
         }
     </script>
 </body>
