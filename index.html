@@ -3,94 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Фитозавр App</title>
+    <title>Фитозавр Dashboard</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        :root {
+            /* === ЦВЕТОВЫЕ НАСТРОЙКИ === */
+            
+            /* Фон всей страницы: БЕЛЫЙ */
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            
+            /* Фон карточек: ВАШ НОВЫЙ СВЕТЛО-ГОЛУБОЙ (rgb 252, 254, 255) */
+            --card-bg: var(--tg-theme-secondary-bg-color, rgb(252, 254, 255));
+            
+            /* Остальные цвета */
+            --text-color: var(--tg-theme-text-color, #000000);
+            --hint-color: var(--tg-theme-hint-color, #8e8e93);
+            --button-color: var(--tg-theme-button-color, #3390ec);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            margin: 0; padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; padding: 15px;
         }
+
         .card {
-            background: var(--tg-theme-secondary-bg-color, #f5f5f5);
-            border-radius: 15px; padding: 20px; margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 16px; 
+            margin-bottom: 12px;
+            
+            /* Т.к. фон очень светлый, делаем границу чуть заметнее (5% черного) */
+            border: 1px solid rgba(0,0,0,0.05);
+            /* И добавляем микро-тень для объема */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
-        h2 { margin-top: 0; font-size: 20px; margin-bottom: 5px; }
-        p { color: var(--tg-theme-hint-color, #888); margin: 0; }
-        
-        .stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 16px; font-weight: 500;}
-        .progress-bar { height: 12px; background: #e0e0e0; border-radius: 6px; overflow: hidden; margin-top: 8px; }
-        .progress-fill { height: 100%; background: var(--tg-theme-button-color, #3390ec); width: 0%; transition: width 0.8s ease-out; }
-        
+
+        h2, h3 { margin-top: 0; margin-bottom: 8px; font-weight: 700; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 17px; opacity: 0.95; }
+        p { color: var(--hint-color); margin: 0; font-size: 15px; }
+
+        /* Прогресс бары */
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 15px; font-weight: 500;}
+        .progress-bar { height: 8px; background: rgba(0, 0, 0, 0.05); border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .progress-fill { height: 100%; transition: width 0.8s ease-out; }
+
+        /* Список еды */
+        .food-list { list-style: none; padding: 0; margin: 0; }
+        .food-item { 
+            display: flex; justify-content: space-between; 
+            padding: 10px 0; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04); 
+            font-size: 15px;
+        }
+        .food-item:last-child { border-bottom: none; }
+        .food-cals { font-weight: 600; color: var(--hint-color); }
+
         .btn {
-            display: block; width: 100%; padding: 15px;
-            background: var(--tg-theme-button-color, #3390ec);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            text-align: center; border-radius: 12px; text-decoration: none; font-weight: bold;
-            margin-top: 20px; border: none; cursor: pointer; font-size: 16px;
+            display: block; width: 100%; padding: 14px;
+            background: var(--button-color); color: var(--button-text);
+            text-align: center; border-radius: 12px; font-weight: 600;
+            border: none; cursor: pointer; font-size: 17px; margin-top: 15px;
         }
-        .btn:active { opacity: 0.8; }
+        .btn:active { opacity: 0.8; transform: scale(0.98); transition: 0.1s; }
     </style>
 </head>
 <body>
 
+    <!-- Шапка -->
     <div class="card">
         <h2 id="username">Загрузка...</h2>
         <p id="goal">...</p>
     </div>
 
+    <!-- Прогресс -->
     <div class="card">
         <div class="stat-row">
-            <span>🔥 Калории (Сегодня)</span>
-            <span id="cals_val">0</span>
+            <span>🔥 Калории</span>
+            <span id="cals_val">0 / 0</span>
         </div>
-        <div class="progress-bar"><div id="cals_bar" class="progress-fill" style="background: #ff9500;"></div></div>
-    </div>
-
-    <div class="card">
-        <div class="stat-row">
+        <div class="progress-bar"><div id="cals_bar" class="progress-fill" style="background: #ff9500; width: 0%"></div></div>
+        
+        <div style="margin-top: 20px;" class="stat-row">
             <span>💧 Вода</span>
             <span id="water_val">0 мл</span>
         </div>
-        <div class="progress-bar"><div id="water_bar" class="progress-fill" style="background: #007aff;"></div></div>
+        <div class="progress-bar"><div id="water_bar" class="progress-fill" style="background: #007aff; width: 0%"></div></div>
+    </div>
+
+    <!-- График веса -->
+    <div class="card">
+        <h3>⚖️ Динамика веса</h3>
+        <canvas id="weightChart" style="max-height: 220px;"></canvas>
+    </div>
+
+    <!-- История еды -->
+    <div class="card">
+        <h3>🍽 Сегодня съедено</h3>
+        <ul id="food_list" class="food-list">
+            <li class="food-item" style="justify-content: center; color: var(--hint-color); padding: 20px;">Пока пусто 🥗</li>
+        </ul>
     </div>
 
     <button class="btn" onclick="Telegram.WebApp.close()">Закрыть</button>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); 
+        tg.expand();
+        tg.enableClosingConfirmation();
 
-        // Берем данные из URL (ссылки)
+        // 1. Парсинг данных
         const params = new URLSearchParams(window.location.search);
-
+        
         const name = params.get('name') || 'Пользователь';
         const goal = params.get('goal') || 'Нет цели';
         const cals = parseInt(params.get('cals')) || 0;
         const water = parseInt(params.get('water')) || 0;
-        const maxCals = parseInt(params.get('max_cals')) || 2000; // Норма калорий
+        const maxCals = parseInt(params.get('max_cals')) || 2000;
 
-        // Заполняем тексты
-        document.getElementById('username').innerText = `Привет, ${name}! 👋`;
-        document.getElementById('goal').innerText = `Цель: ${goal}`;
-        document.getElementById('cals_val').innerText = `${cals} / ${maxCals} ккал`;
+        let weightHistory = [];
+        let mealsHistory = [];
+        try {
+            weightHistory = JSON.parse(decodeURIComponent(params.get('weights'))) || [];
+            mealsHistory = JSON.parse(decodeURIComponent(params.get('meals'))) || [];
+        } catch (e) { console.error("JSON Error", e); }
+
+        // 2. Заполнение UI
+        document.getElementById('username').innerText = name;
+        document.getElementById('goal').innerText = goal;
+        document.getElementById('cals_val').innerText = `${cals} / ${maxCals}`;
         document.getElementById('water_val').innerText = `${water} мл`;
 
-        // Анимация полосок
+        // Анимация
         setTimeout(() => {
-            // Калории (процент от нормы)
-            let calsPercent = (cals / maxCals) * 100;
-            if(calsPercent > 100) calsPercent = 100;
+            let calsPercent = Math.min((cals / maxCals) * 100, 100);
             document.getElementById('cals_bar').style.width = calsPercent + '%';
-
-            // Вода (норма условно 2500 мл)
-            let waterPercent = (water / 2500) * 100;
-            if(waterPercent > 100) waterPercent = 100;
+            
+            let waterPercent = Math.min((water / 2500) * 100, 100);
             document.getElementById('water_bar').style.width = waterPercent + '%';
-        }, 300);
+        }, 150);
 
+        // 3. Список еды
+        const foodListEl = document.getElementById('food_list');
+        if (mealsHistory.length > 0) {
+            foodListEl.innerHTML = ''; 
+            mealsHistory.forEach(item => {
+                let li = document.createElement('li');
+                li.className = 'food-item';
+                li.innerHTML = `<span>${item.n}</span><span class="food-cals">${item.c}</span>`;
+                foodListEl.appendChild(li);
+            });
+        }
+
+        // 4. График
+        if (weightHistory.length > 0) {
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            
+            let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(51, 144, 236, 0.4)');
+            gradient.addColorStop(1, 'rgba(51, 144, 236, 0.0)');
+
+            const labels = weightHistory.map(w => w.d);
+            const dataPoints = weightHistory.map(w => w.w);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Вес',
+                        data: dataPoints,
+                        borderColor: '#3390ec',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#3390ec',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#8e8e93', font: {size: 11} } },
+                        y: { 
+                            grid: { color: 'rgba(0, 0, 0, 0.04)', borderDash: [5, 5] }, 
+                            ticks: { color: '#8e8e93', font: {size: 11} } 
+                        }
+                    }
+                }
+            });
+        } else {
+            document.getElementById('weightChart').style.display = 'none';
+            document.querySelector('.card:nth-child(3)').innerHTML += "<p style='text-align:center; padding:10px;'>Нужно больше замеров веса ⚖️</p>";
+        }
     </script>
 </body>
 </html>
