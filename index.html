@@ -21,36 +21,28 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            padding-bottom: 90px;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            margin: 0; padding: 0; padding-bottom: 90px;
+            -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
         }
 
-        /* Header */
+        /* HEADER */
         .header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 20px; background: var(--bg-color);
         }
-        .header-title { text-align: center; flex-grow: 1; }
-        .header-title h1 { margin: 0; font-size: 17px; font-weight: 600; }
-        .header-title p { margin: 0; font-size: 12px; color: var(--text-secondary); }
-        .btn-text { color: var(--accent-blue); cursor: pointer; font-size: 17px; border: none; background: none; padding: 0;}
-        .plus-icon { width: 20px; } 
+        .header-title h1 { margin: 0; font-size: 17px; font-weight: 600; text-align: center; }
+        .header-title p { margin: 0; font-size: 12px; color: var(--text-secondary); text-align: center; }
+        .btn-text { color: var(--accent-blue); cursor: pointer; font-size: 17px; border: none; background: none; }
 
         .container { padding: 0 15px; }
 
-        /* Card Base */
+        /* CARDS */
         .card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            background: var(--card-bg); border-radius: 20px; padding: 20px;
+            margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
-        /* 1. Calories Section */
+        /* 1. CALORIES CIRCLE */
         .calories-grid { display: flex; align-items: center; gap: 20px; }
         .progress-circle { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
         .progress-circle svg { transform: rotate(-90deg); width: 100%; height: 100%; }
@@ -60,30 +52,25 @@
             stroke-linecap: round; stroke-dasharray: 314; stroke-dashoffset: 314; 
             transition: stroke-dashoffset 1s ease-out;
         }
-        .circle-text {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;
-        }
+        .circle-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
         .circle-text .val { font-size: 22px; font-weight: 800; line-height: 1.2; }
         .circle-text .goal { font-size: 10px; color: var(--text-secondary); }
         
-        .user-block { display: flex; flex-direction: column; justify-content: center; }
-        .label-text { color: var(--text-secondary); font-size: 13px; margin-bottom: 4px; }
-        .username-text { font-size: 20px; font-weight: 700; line-height: 1.2; }
+        .user-block .username-text { font-size: 20px; font-weight: 700; }
+        .user-block .label-text { color: var(--text-secondary); font-size: 13px; }
 
-        /* 2. SCAN BUTTON */
+        /* 2. SCAN BUTTON (BIG) */
         .scan-btn {
             display: flex; align-items: center; justify-content: center; gap: 10px;
             width: 100%; padding: 15px;
             background: var(--accent-blue); color: white;
-            border-radius: 18px; border: none;
-            font-size: 16px; font-weight: 600;
+            border-radius: 18px; border: none; font-size: 16px; font-weight: 600;
             margin-bottom: 15px; cursor: pointer;
             box-shadow: 0 4px 12px rgba(51, 144, 236, 0.3);
-            transition: transform 0.1s;
         }
         .scan-btn:active { transform: scale(0.98); }
 
-        /* 3. Water Section */
+        /* 3. WATER */
         .water-header { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
         .water-title { font-weight: 600; font-size: 17px; }
         .water-val { font-weight: 600; font-size: 17px; color: var(--accent-blue); }
@@ -95,88 +82,68 @@
         }
         .btn-water:active { opacity: 0.7; }
 
-        /* 4. Weight Section */
-        .weight-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        /* 4. WEIGHT */
+        .weight-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .weight-current { font-size: 22px; font-weight: 700; }
         .weight-info { font-size: 13px; color: var(--text-secondary); text-align: right; }
-        .chart-container { width: 100%; height: 60px; position: relative; }
-        .weight-labels { display: flex; justify-content: space-between; font-size: 11px; color: #ccc; margin-top: 5px; }
+        .chart-container { width: 100%; height: 60px; }
         
         .btn-weight-update {
             width: 100%; padding: 12px; margin-top: 15px;
             background: #f0f0f0; color: var(--text-main);
-            border-radius: 12px; border: none;
-            font-size: 15px; font-weight: 600; cursor: pointer;
+            border-radius: 12px; border: none; font-size: 15px; font-weight: 600; cursor: pointer;
         }
 
-        /* 5. Food List */
+        /* 5. FOOD LIST */
         .section-header { margin-bottom: 10px; }
         .section-title { font-weight: 600; font-size: 17px; }
-        .food-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid #f0f0f0;
-        }
+        .food-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; align-items: center; }
         .food-item:last-child { border-bottom: none; }
         .food-info { display: flex; align-items: center; gap: 12px; }
         .food-icon { font-size: 22px; width: 30px; text-align: center; }
         .food-name { font-weight: 500; font-size: 16px; }
         .food-kcal { color: var(--text-secondary); font-size: 14px; font-weight: 500; }
 
-        /* 6. Buttons */
+        /* 6. BOTTOM ACTIONS */
         .btn-outline {
             width: 100%; padding: 14px; background: transparent;
             color: var(--accent-blue); border-radius: 16px; 
             border: 2px solid rgba(51, 144, 236, 0.2);
-            font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 5px;
+            font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px;
         }
 
-        /* Modal */
-        .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
-            align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background-color: #fff; padding: 25px; border-radius: 20px;
-            width: 80%; max-width: 300px; text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .modal h3 { margin-top: 0; margin-bottom: 15px; font-size: 18px; }
-        .modal input {
-            width: 80%; padding: 10px; font-size: 24px; text-align: center;
-            border: 1px solid #ddd; border-radius: 10px; margin-bottom: 20px; outline: none;
-        }
+        /* POPUP MODAL */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+        .modal-content { background-color: #fff; padding: 25px; border-radius: 20px; width: 80%; max-width: 300px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .modal h3 { margin: 0 0 15px 0; font-size: 18px; }
+        .modal input { width: 80%; padding: 10px; font-size: 24px; text-align: center; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 20px; outline: none; }
+        .modal input:focus { border-color: var(--accent-blue); }
         .modal-btns { display: flex; gap: 10px; }
-        .btn-cancel { background: #f0f0f0; color: #000; flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; }
-        .btn-save { background: var(--accent-blue); color: #fff; flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; }
+        .btn-cancel { background: #f0f0f0; color: #000; flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 600; }
+        .btn-save { background: var(--accent-blue); color: #fff; flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 600; }
 
-        /* Nav Bar */
+        /* NAV BAR */
         .nav-bar {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
             display: flex; justify-content: space-around;
-            padding: 10px 0 25px 0; border-top: 1px solid #e5e5e5;
-            z-index: 100;
+            padding: 10px 0 25px 0; border-top: 1px solid #e5e5e5; z-index: 100;
         }
-        .nav-item { text-align: center; color: var(--text-secondary); font-size: 10px; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: default; }
+        .nav-item { text-align: center; color: var(--text-secondary); font-size: 10px; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .nav-item.active { color: var(--accent-blue); }
         .nav-icon { font-size: 22px; }
-
     </style>
 </head>
 <body>
 
     <div class="header">
         <button class="btn-text" onclick="Telegram.WebApp.close()">Закрыть</button>
-        <div class="header-title">
-            <h1>Фитозавр</h1>
-            <p>Дневник питания</p>
-        </div>
-        <div class="plus-icon"></div> 
+        <div class="header-title"><h1>Фитозавр</h1><p>Дневник питания</p></div>
+        <div style="width: 20px;"></div> 
     </div>
 
     <div class="container">
-        
+        <!-- 1. Calorie Circle -->
         <div class="card">
             <div class="calories-grid">
                 <div class="progress-circle">
@@ -197,8 +164,10 @@
             </div>
         </div>
 
+        <!-- 2. Scan Button -->
         <button class="scan-btn" onclick="triggerScan()">📷 Сканировать еду</button>
 
+        <!-- 3. Water -->
         <div class="card">
             <div class="water-header">
                 <div class="water-title">💧 Вода</div>
@@ -210,6 +179,7 @@
             </div>
         </div>
 
+        <!-- 4. Weight -->
         <div class="card">
             <div class="weight-header">
                 <div style="font-weight: 600; font-size: 17px;">⚖️ Вес</div>
@@ -218,35 +188,27 @@
                     <div class="weight-info" id="weight-diff">Нет данных</div>
                 </div>
             </div>
-            <div class="chart-container">
-                <canvas id="weightChart"></canvas>
-            </div>
-            <div class="weight-labels">
-                <span>7 дней назад</span>
-                <span>Сегодня</span>
-            </div>
+            <div class="chart-container"><canvas id="weightChart"></canvas></div>
             <button class="btn-weight-update" onclick="openWeightModal()">Зафиксировать вес</button>
         </div>
 
+        <!-- 5. Food List -->
         <div class="card">
-            <div class="section-header">
-                <div class="section-title">🍽 Сегодня съедено</div>
-            </div>
+            <div class="section-header"><div class="section-title">🍽 Сегодня съедено</div></div>
             <div id="food-list-container">
                 <div class="food-item" style="color: #ccc; justify-content: center;">Список пуст</div>
             </div>
         </div>
 
+        <!-- 6. Bottom Actions -->
         <div class="card">
-            <div class="section-header">
-                <div class="section-title">📅 Действия</div>
-            </div>
+            <div class="section-header"><div class="section-title">📅 Действия</div></div>
             <button class="btn-outline" onclick="triggerMenu()">Составить меню на завтра</button>
-            <button class="btn-outline" style="margin-top: 10px;" onclick="triggerPDF()">📄 Скачать отчет PDF</button>
+            <button class="btn-outline" onclick="triggerPDF()">📄 Скачать отчет PDF</button>
         </div>
-
     </div>
 
+    <!-- Weight Popup -->
     <div id="weightModal" class="modal">
         <div class="modal-content">
             <h3>Ваш вес (кг)</h3>
@@ -258,6 +220,7 @@
         </div>
     </div>
 
+    <!-- Nav Bar -->
     <div class="nav-bar">
         <div class="nav-item active"><span class="nav-icon">🏠</span>Сегодня</div>
         <div class="nav-item"><span class="nav-icon">🕒</span>История</div>
@@ -268,8 +231,7 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.setHeaderColor('#f4f7f9'); 
-        tg.setBackgroundColor('#f4f7f9');
+        tg.setHeaderColor('#f4f7f9'); tg.setBackgroundColor('#f4f7f9');
 
         const params = new URLSearchParams(window.location.search);
         const name = params.get('name') || 'Пользователь';
@@ -306,30 +268,23 @@
             if (weightHistory.length > 1) {
                 const diff = (lastW - weightHistory[0].w).toFixed(1);
                 const sign = diff > 0 ? "+" : "";
-                const diffEl = document.getElementById('weight-diff');
-                diffEl.innerText = `${sign}${diff} кг за 7 дней`;
-                diffEl.style.color = diff <= 0 ? '#34c759' : '#ff3b30';
+                const el = document.getElementById('weight-diff');
+                el.innerText = `${sign}${diff} кг за 7 дней`;
+                el.style.color = diff <= 0 ? '#34c759' : '#ff3b30';
             }
         }
 
         if (weightHistory.length > 0) {
-            const ctx = document.getElementById('weightChart').getContext('2d');
-            new Chart(ctx, {
+            new Chart(document.getElementById('weightChart').getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: weightHistory.map(w => w.d),
                     datasets: [{
                         data: weightHistory.map(w => w.w),
-                        borderColor: '#3390ec', borderWidth: 2,
-                        pointRadius: 0, pointHoverRadius: 4, fill: false, tension: 0.4
+                        borderColor: '#3390ec', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.4
                     }]
                 },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { display: false }, y: { display: false } },
-                    layout: { padding: 5 }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, layout: { padding: 5 } }
             });
         }
 
@@ -353,37 +308,20 @@
             document.getElementById('water-val').innerText = (current + amount) + " мл";
         }
 
-        function triggerScan() {
-            tg.HapticFeedback.impactOccurred('medium');
-            tg.sendData("scan_food");
-        }
-
-        function triggerMenu() {
-            tg.HapticFeedback.impactOccurred('medium');
-            tg.sendData("get_menu");
-        }
-
-        function triggerPDF() {
-            tg.HapticFeedback.notificationOccurred('success');
-            tg.sendData("generate_pdf");
-        }
+        function triggerScan() { tg.HapticFeedback.impactOccurred('medium'); tg.sendData("scan_food"); }
+        function triggerMenu() { tg.HapticFeedback.impactOccurred('medium'); tg.sendData("get_menu"); }
+        function triggerPDF() { tg.HapticFeedback.notificationOccurred('success'); tg.sendData("generate_pdf"); }
 
         const modal = document.getElementById('weightModal');
         const weightInput = document.getElementById('weightInput');
-
         function openWeightModal() { modal.style.display = 'flex'; weightInput.focus(); }
         function closeModal() { modal.style.display = 'none'; }
         function saveWeight() {
             const val = weightInput.value;
-            if (val && !isNaN(val)) {
-                tg.sendData(`save_weight_${val}`);
-                closeModal();
-            } else {
-                tg.showAlert("Введите корректное число");
-            }
+            if (val && !isNaN(val)) { tg.sendData(`save_weight_${val}`); closeModal(); }
+            else { tg.showAlert("Введите число"); }
         }
         window.onclick = function(event) { if (event.target == modal) closeModal(); }
-
     </script>
 </body>
 </html>
