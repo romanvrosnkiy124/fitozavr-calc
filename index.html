@@ -8,8 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #f4f7f9;
-            --card-bg: #ffffff;
+            /* ЦВЕТОВАЯ ПАЛИТРА */
+            --bg-color: #f4f7f9; /* Общий фон */
+            --card-bg: #ffffff;  /* Фон карточек */
             --text-main: #000000;
             --text-secondary: #8e8e93;
             --accent-blue: #3390ec;
@@ -23,31 +24,25 @@
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            padding-bottom: 90px; /* Отступ под навигацию */
+            padding-bottom: 90px; /* Отступ чтобы контент не перекрывался нижним меню */
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Header */
+        /* --- HEADER --- */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: var(--bg-color);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background: var(--bg-color);
         }
-        .header-title {
-            text-align: center;
-            flex-grow: 1;
-        }
+        .header-title { text-align: center; flex-grow: 1; }
         .header-title h1 { margin: 0; font-size: 17px; font-weight: 600; }
         .header-title p { margin: 0; font-size: 12px; color: var(--text-secondary); }
-        .btn-text { color: var(--accent-blue); cursor: pointer; font-size: 17px; text-decoration: none; border: none; background: none; padding: 0;}
-        .plus-icon { font-size: 24px; color: var(--accent-blue); font-weight: 300; opacity: 0; } /* Скрыто для баланса */
+        .btn-text { color: var(--accent-blue); cursor: pointer; font-size: 17px; border: none; background: none; padding: 0;}
+        .plus-icon { width: 20px; } 
 
         .container { padding: 0 15px; }
 
-        /* Card Base */
+        /* --- КАРТОЧКИ (ОБЩИЙ СТИЛЬ) --- */
         .card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -56,93 +51,108 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
-        /* Calories Section */
+        /* 1. БЛОК КАЛОРИЙ (КРУГ) */
         .calories-grid { display: flex; align-items: center; gap: 20px; }
-        .progress-circle {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            flex-shrink: 0;
-        }
+        .progress-circle { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
         .progress-circle svg { transform: rotate(-90deg); width: 100%; height: 100%; }
         .progress-circle .bg { fill: none; stroke: #f0f0f0; stroke-width: 8; }
         .progress-circle .meter { 
             fill: none; stroke: var(--accent-orange); stroke-width: 8; 
-            stroke-linecap: round; 
-            stroke-dasharray: 314; /* 2 * PI * 50 */
-            stroke-dashoffset: 314; 
+            stroke-linecap: round; stroke-dasharray: 314; stroke-dashoffset: 314; 
             transition: stroke-dashoffset 1s ease-out;
         }
         .circle-text {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;
         }
         .circle-text .val { font-size: 22px; font-weight: 800; line-height: 1.2; }
         .circle-text .goal { font-size: 10px; color: var(--text-secondary); }
 
-        /* User Info inside Calories card */
         .user-block { display: flex; flex-direction: column; justify-content: center; }
         .label-text { color: var(--text-secondary); font-size: 13px; margin-bottom: 4px; }
         .username-text { font-size: 20px; font-weight: 700; line-height: 1.2; }
 
-        /* Water Section */
+        /* 2. КНОПКА СКАНИРОВАНИЯ (МЕЖДУ БЛОКАМИ) */
+        .scan-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 15px;
+            background: var(--accent-blue); color: white;
+            border-radius: 18px; border: none;
+            font-size: 16px; font-weight: 600;
+            margin-bottom: 15px; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(51, 144, 236, 0.3);
+            transition: transform 0.1s;
+        }
+        .scan-btn:active { transform: scale(0.98); }
+
+        /* 3. ВОДА */
         .water-header { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
-        .water-title { font-weight: 600; font-size: 17px; display: flex; align-items: center; gap: 8px;}
+        .water-title { font-weight: 600; font-size: 17px; }
         .water-val { font-weight: 600; font-size: 17px; color: var(--accent-blue); }
-        
         .water-buttons { display: flex; gap: 10px; }
         .btn-water {
             flex: 1; padding: 12px; border-radius: 14px; border: none;
             background: var(--accent-light-blue); color: var(--accent-blue);
             font-weight: 600; font-size: 15px; cursor: pointer;
-            transition: opacity 0.2s;
         }
         .btn-water:active { opacity: 0.7; }
 
-        /* Weight Section */
+        /* 4. ВЕС */
         .weight-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .weight-current { font-size: 22px; font-weight: 700; }
         .weight-info { font-size: 13px; color: var(--text-secondary); text-align: right; }
-        
-        /* График (Canvas) */
         .chart-container { width: 100%; height: 60px; position: relative; }
-        
         .weight-labels { display: flex; justify-content: space-between; font-size: 11px; color: #ccc; margin-top: 5px; }
 
-        /* Food List */
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .btn-weight-update {
+            width: 100%; padding: 12px; margin-top: 15px;
+            background: #f0f0f0; color: var(--text-main);
+            border-radius: 12px; border: none;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+        }
+
+        /* 5. СПИСОК ЕДЫ */
+        .section-header { margin-bottom: 10px; }
         .section-title { font-weight: 600; font-size: 17px; }
-        
-        .food-list { list-style: none; padding: 0; margin: 0; }
         .food-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 12px 0; border-bottom: 1px solid #f0f0f0;
         }
         .food-item:last-child { border-bottom: none; }
-        
         .food-info { display: flex; align-items: center; gap: 12px; }
         .food-icon { font-size: 22px; width: 30px; text-align: center; }
         .food-name { font-weight: 500; font-size: 16px; }
         .food-kcal { color: var(--text-secondary); font-size: 14px; font-weight: 500; }
 
-        /* Main Buttons */
-        .btn-main {
-            width: 100%; padding: 16px; background: var(--accent-blue);
-            color: white; border-radius: 16px; border: none;
-            font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 10px;
-        }
-        .btn-main:active { opacity: 0.9; }
-
-        .btn-pdf {
-            width: 100%; padding: 16px; background: transparent;
+        /* 6. КНОПКИ ВНИЗУ (МЕНЮ И PDF) */
+        .btn-outline {
+            width: 100%; padding: 14px; background: transparent;
             color: var(--accent-blue); border-radius: 16px; 
             border: 2px solid rgba(51, 144, 236, 0.2);
-            font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 20px;
+            font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 5px;
         }
-        .btn-pdf:active { background: rgba(51, 144, 236, 0.05); }
 
-        /* Bottom Nav */
+        /* --- ВСПЛЫВАЮЩЕЕ ОКНО (POP-UP) --- */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background-color: #fff; padding: 25px; border-radius: 20px;
+            width: 80%; max-width: 300px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .modal h3 { margin-top: 0; margin-bottom: 15px; font-size: 18px; }
+        .modal input {
+            width: 80%; padding: 10px; font-size: 24px; text-align: center;
+            border: 1px solid #ddd; border-radius: 10px; margin-bottom: 20px; outline: none;
+        }
+        .modal input:focus { border-color: var(--accent-blue); }
+        .modal-btns { display: flex; gap: 10px; }
+        .btn-cancel { background: #f0f0f0; color: #000; flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; }
+        .btn-save { background: var(--accent-blue); color: #fff; flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; }
+
+        /* НИЖНЕЕ МЕНЮ (ВИЗУАЛЬНОЕ) */
         .nav-bar {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
@@ -158,6 +168,7 @@
 </head>
 <body>
 
+    <!-- ШАПКА -->
     <div class="header">
         <button class="btn-text" onclick="Telegram.WebApp.close()">Закрыть</button>
         <div class="header-title">
@@ -168,7 +179,8 @@
     </div>
 
     <div class="container">
-        <!-- Калории -->
+
+        <!-- 1. КАРТОЧКА КАЛОРИЙ -->
         <div class="card">
             <div class="calories-grid">
                 <div class="progress-circle">
@@ -189,7 +201,12 @@
             </div>
         </div>
 
-        <!-- Вода -->
+        <!-- 2. КНОПКА СКАНИРОВАНИЯ (МЕЖДУ БЛОКАМИ) -->
+        <button class="scan-btn" onclick="triggerScan()">
+            📷 Сканировать еду
+        </button>
+
+        <!-- 3. ВОДА -->
         <div class="card">
             <div class="water-header">
                 <div class="water-title">💧 Вода</div>
@@ -201,7 +218,7 @@
             </div>
         </div>
 
-        <!-- Вес -->
+        <!-- 4. ВЕС (С ГРАФИКОМ И КНОПКОЙ) -->
         <div class="card">
             <div class="weight-header">
                 <div style="font-weight: 600; font-size: 17px;">⚖️ Вес</div>
@@ -210,7 +227,6 @@
                     <div class="weight-info" id="weight-diff">Нет данных</div>
                 </div>
             </div>
-            <!-- График Chart.js -->
             <div class="chart-container">
                 <canvas id="weightChart"></canvas>
             </div>
@@ -218,27 +234,44 @@
                 <span>7 дней назад</span>
                 <span>Сегодня</span>
             </div>
+            <!-- Кнопка обновления веса -->
+            <button class="btn-weight-update" onclick="openWeightModal()">Зафиксировать вес</button>
         </div>
 
-        <!-- Еда -->
+        <!-- 5. СПИСОК ЕДЫ -->
         <div class="card">
             <div class="section-header">
                 <div class="section-title">🍽 Сегодня съедено</div>
             </div>
             <div id="food-list-container">
-                <!-- Сюда попадет еда через JS -->
-                <div class="food-item" style="color: #ccc; justify-content: center;">
-                    Список пуст
-                </div>
+                <div class="food-item" style="color: #ccc; justify-content: center;">Список пуст</div>
             </div>
         </div>
 
-        <!-- Кнопки действий -->
-        <button class="btn-pdf" id="pdfBtn">📄 Скачать отчет PDF</button>
-        <button class="btn-main" onclick="Telegram.WebApp.close()">Готово</button>
+        <!-- 6. ПЛАНИРОВАНИЕ И ОТЧЕТ -->
+        <div class="card">
+            <div class="section-header">
+                <div class="section-title">📅 Действия</div>
+            </div>
+            <button class="btn-outline" onclick="triggerMenu()">Составить меню на завтра</button>
+            <button class="btn-outline" style="margin-top: 10px;" onclick="triggerPDF()">📄 Скачать отчет PDF</button>
+        </div>
+
     </div>
 
-    <!-- Нижнее меню (визуальное) -->
+    <!-- МОДАЛЬНОЕ ОКНО (POP-UP ДЛЯ ВЕСА) -->
+    <div id="weightModal" class="modal">
+        <div class="modal-content">
+            <h3>Ваш вес (кг)</h3>
+            <input type="number" id="weightInput" placeholder="00.0" step="0.1" inputmode="decimal">
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+                <button class="btn-save" onclick="saveWeight()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ВИЗУАЛЬНОЕ МЕНЮ ВНИЗУ -->
     <div class="nav-bar">
         <div class="nav-item active"><span class="nav-icon">🏠</span>Сегодня</div>
         <div class="nav-item"><span class="nav-icon">🕒</span>История</div>
@@ -249,13 +282,10 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        // Цвет заголовка как фон
         tg.setHeaderColor('#f4f7f9'); 
         tg.setBackgroundColor('#f4f7f9');
 
-        // --- ЛОГИКА ПРИЛОЖЕНИЯ ---
-
-        // 1. Парсинг данных из URL
+        // --- 1. ПОЛУЧЕНИЕ И ОБРАБОТКА ДАННЫХ ---
         const params = new URLSearchParams(window.location.search);
         const name = params.get('name') || 'Пользователь';
         const goal = params.get('goal') || 'Цель';
@@ -263,57 +293,44 @@
         const water = parseInt(params.get('water')) || 0;
         const maxCals = parseInt(params.get('max_cals')) || 2000;
 
-        let weightHistory = [];
-        let mealsHistory = [];
+        let weightHistory = [], mealsHistory = [];
         try {
             weightHistory = JSON.parse(decodeURIComponent(params.get('weights'))) || [];
             mealsHistory = JSON.parse(decodeURIComponent(params.get('meals'))) || [];
-        } catch (e) { console.error("JSON Error", e); }
+        } catch (e) {}
 
-        // 2. Обновление UI
+        // --- 2. ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---
         document.getElementById('username').innerText = name;
         document.getElementById('goal-text').innerText = goal;
         document.getElementById('current-cal').innerText = cals;
         document.getElementById('goal-cal').innerText = maxCals;
         document.getElementById('water-val').innerText = water + " мл";
 
-        // 3. Анимация круга
-        function updateProgress(current, max) {
+        // Анимация круга калорий
+        setTimeout(() => {
             const circle = document.getElementById('circle-progress');
             const radius = 50;
-            const circumference = 2 * Math.PI * radius; // ~314
-            
-            // Ограничиваем, чтобы не ушло в минус (если переел)
-            const percent = Math.min(current / max, 1);
+            const circumference = 2 * Math.PI * radius; 
+            const percent = Math.min(cals / maxCals, 1);
             const offset = circumference - (percent * circumference);
-            
             circle.style.strokeDashoffset = offset;
-            
-            // Если перебор калорий, меняем цвет на красный
-            if (current > max) {
-                circle.style.stroke = '#ff3b30';
-            }
-        }
-        
-        // Запуск анимации с небольшой задержкой
-        setTimeout(() => updateProgress(cals, maxCals), 100);
+            if (cals > maxCals) circle.style.stroke = '#ff3b30'; // Красный при переборе
+        }, 100);
 
-        // 4. Логика веса
+        // Логика отображения веса
         if (weightHistory.length > 0) {
             const lastW = weightHistory[weightHistory.length - 1].w;
             document.getElementById('current-weight').innerText = lastW + " кг";
-            
             if (weightHistory.length > 1) {
-                const firstW = weightHistory[0].w;
-                const diff = (lastW - firstW).toFixed(1);
+                const diff = (lastW - weightHistory[0].w).toFixed(1);
                 const sign = diff > 0 ? "+" : "";
-                document.getElementById('weight-diff').innerText = `${sign}${diff} кг за 7 дней`;
-                // Цвет текста разницы
-                document.getElementById('weight-diff').style.color = diff <= 0 ? '#34c759' : '#ff3b30'; // Зеленый если похудел
+                const diffEl = document.getElementById('weight-diff');
+                diffEl.innerText = `${sign}${diff} кг за 7 дней`;
+                diffEl.style.color = diff <= 0 ? '#34c759' : '#ff3b30';
             }
         }
 
-        // 5. График (Chart.js)
+        // Отрисовка графика (Chart.js)
         if (weightHistory.length > 0) {
             const ctx = document.getElementById('weightChart').getContext('2d');
             new Chart(ctx, {
@@ -322,65 +339,82 @@
                     labels: weightHistory.map(w => w.d),
                     datasets: [{
                         data: weightHistory.map(w => w.w),
-                        borderColor: '#3390ec',
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        pointHoverRadius: 4,
-                        fill: false,
-                        tension: 0.4
+                        borderColor: '#3390ec', borderWidth: 2,
+                        pointRadius: 0, pointHoverRadius: 4, fill: false, tension: 0.4
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    },
+                    scales: { x: { display: false }, y: { display: false } },
                     layout: { padding: 5 }
                 }
             });
         }
 
-        // 6. Список еды
+        // Список еды
         const listContainer = document.getElementById('food-list-container');
         if (mealsHistory.length > 0) {
             listContainer.innerHTML = '';
             const icons = ['🥩', '🥗', '🍎', '🥘', '🍲', '🥖', '🍳', '🥛']; 
-            
             mealsHistory.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'food-item';
                 const icon = icons[Math.floor(Math.random() * icons.length)];
-                
-                div.innerHTML = `
-                    <div class="food-info">
-                        <span class="food-icon">${icon}</span>
-                        <span class="food-name">${item.n}</span>
-                    </div>
-                    <div class="food-kcal">${item.c} ккал</div>
-                `;
+                div.innerHTML = `<div class="food-info"><span class="food-icon">${icon}</span><span class="food-name">${item.n}</span></div><div class="food-kcal">${item.c} ккал</div>`;
                 listContainer.appendChild(div);
             });
         }
 
-        // --- КНОПКИ ---
-        
+        // --- 3. ДЕЙСТВИЯ КНОПОК ---
+
         function addWater(amount) {
-            tg.HapticFeedback.impactOccurred('light'); // Вибрация
+            tg.HapticFeedback.impactOccurred('light');
             tg.sendData(`add_water_${amount}`);
-            
-            // Мгновенное обновление UI
-            let current = parseInt(document.getElementById('water-val').innerText);
-            document.getElementById('water-val').innerText = (current + amount) + " мл";
         }
 
-        document.getElementById('pdfBtn').addEventListener('click', function(){
+        function triggerScan() {
+            tg.HapticFeedback.impactOccurred('medium');
+            tg.sendData("scan_food");
+        }
+
+        function triggerMenu() {
+            tg.HapticFeedback.impactOccurred('medium');
+            tg.sendData("get_menu");
+        }
+
+        function triggerPDF() {
             tg.HapticFeedback.notificationOccurred('success');
             tg.sendData("generate_pdf");
-            tg.close();
-        });
+        }
+
+        // --- 4. ЛОГИКА МОДАЛЬНОГО ОКНА ---
+        const modal = document.getElementById('weightModal');
+        const weightInput = document.getElementById('weightInput');
+
+        function openWeightModal() {
+            modal.style.display = 'flex';
+            weightInput.focus();
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        function saveWeight() {
+            const val = weightInput.value;
+            if (val && !isNaN(val)) {
+                tg.sendData(`save_weight_${val}`);
+                closeModal();
+            } else {
+                tg.showAlert("Введите корректное число");
+            }
+        }
+
+        // Закрытие по клику вне окна
+        window.onclick = function(event) {
+            if (event.target == modal) closeModal();
+        }
 
     </script>
 </body>
