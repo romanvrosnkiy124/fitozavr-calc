@@ -15,7 +15,6 @@
             background-color: var(--bg-color); 
             color: var(--text-main); 
             margin: 0; 
-            /* Уменьшили отступ снизу, так как меню больше нет */
             padding: 20px 0 40px 0; 
             -webkit-user-select: none; 
             -webkit-tap-highlight-color: transparent; 
@@ -61,6 +60,13 @@
         .food-name { font-weight: 500; font-size: 16px; }
         .food-kcal { color: var(--text-secondary); font-size: 14px; font-weight: 500; }
         
+        /* КНОПКА ИСТОРИИ (Внутри блока еды) */
+        .btn-history {
+            width: 100%; padding: 12px; margin-top: 5px;
+            background: transparent; color: var(--accent-blue);
+            border: none; font-size: 15px; font-weight: 600; cursor: pointer;
+        }
+
         .btn-outline { width: 100%; padding: 14px; background: transparent; color: var(--accent-blue); border-radius: 16px; border: 2px solid rgba(51, 144, 236, 0.2); font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
         
         /* Modal */
@@ -136,12 +142,14 @@
                 <button class="btn-weight-update" onclick="openWeightModal()">Обновить вес</button>
             </div>
 
-            <!-- 5. Food List -->
+            <!-- 5. Food List + History Button -->
             <div class="card">
                 <div class="section-header"><div class="section-title">🍽 Сегодня съедено</div></div>
                 <div id="food-list-container">
                     <div class="food-item" style="color: #ccc; justify-content: center;">Список пуст</div>
                 </div>
+                <!-- КНОПКА ИСТОРИИ -->
+                <button class="btn-history" onclick="triggerHistory()">📜 Вся история</button>
             </div>
 
             <!-- 6. Bottom Actions -->
@@ -173,7 +181,6 @@
 
         const params = new URLSearchParams(window.location.search);
         
-        // ПРОВЕРКА: Если нет параметров, показываем заглушку
         if (!params.has('name') && !params.has('cals')) {
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('error-screen').style.display = 'flex';
@@ -226,7 +233,8 @@
                     labels: weightHistory.map(w => w.d),
                     datasets: [{
                         data: weightHistory.map(w => w.w),
-                        borderColor: '#3390ec', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.4
+                        borderColor: '#3390ec', borderWidth: 2,
+                        pointRadius: 0, pointHoverRadius: 4, fill: false, tension: 0.4
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, layout: { padding: 5 } }
@@ -234,10 +242,8 @@
         }
 
         const listContainer = document.getElementById('food-list-container');
-        listContainer.innerHTML = '';
-        if (mealsHistory.length === 0) {
-            listContainer.innerHTML = '<div class="food-item" style="color:#ccc;justify-content:center;">Список пуст</div>';
-        } else {
+        if (mealsHistory.length > 0) {
+            listContainer.innerHTML = '';
             const icons = ['🥩', '🥗', '🍎', '🥘', '🍲', '🥖', '🍳', '🥛']; 
             mealsHistory.forEach(item => {
                 const div = document.createElement('div');
@@ -258,6 +264,12 @@
         function triggerScan() { try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} tg.sendData("scan_food"); }
         function triggerMenu() { try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} tg.sendData("get_menu"); }
         function triggerPDF() { try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){} tg.sendData("generate_pdf"); }
+        
+        // НОВАЯ КНОПКА ИСТОРИИ
+        function triggerHistory() { 
+            try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} 
+            tg.sendData("get_history"); 
+        }
 
         const modal = document.getElementById('weightModal');
         const weightInput = document.getElementById('weightInput');
