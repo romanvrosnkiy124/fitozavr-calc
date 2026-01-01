@@ -15,13 +15,11 @@
             background-color: var(--bg-color); 
             color: var(--text-main); 
             margin: 0; 
-            /* Убрали padding: 0 и добавили отступ сверху 20px, чтобы было красиво */
-            padding: 20px 0 90px 0; 
+            /* Уменьшили отступ снизу, так как меню больше нет */
+            padding: 20px 0 40px 0; 
             -webkit-user-select: none; 
             -webkit-tap-highlight-color: transparent; 
         }
-        
-        /* HEADER СТИЛИ УДАЛЕНЫ */
         
         .container { padding: 0 15px; }
         .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
@@ -37,17 +35,23 @@
         .circle-text .goal { font-size: 10px; color: var(--text-secondary); }
         .user-block .username-text { font-size: 20px; font-weight: 700; }
         .user-block .label-text { color: var(--text-secondary); font-size: 13px; }
+        
         .scan-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; background: var(--accent-blue); color: white; border-radius: 18px; border: none; font-size: 16px; font-weight: 600; margin-bottom: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(51, 144, 236, 0.3); }
+        .scan-btn:active { transform: scale(0.98); }
+        
         .water-header { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
         .water-title { font-weight: 600; font-size: 17px; }
         .water-val { font-weight: 600; font-size: 17px; color: var(--accent-blue); }
         .water-buttons { display: flex; gap: 10px; }
         .btn-water { flex: 1; padding: 12px; border-radius: 14px; border: none; background: var(--accent-light-blue); color: var(--accent-blue); font-weight: 600; font-size: 15px; cursor: pointer; }
+        .btn-water:active { opacity: 0.7; }
+        
         .weight-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .weight-current { font-size: 22px; font-weight: 700; }
         .weight-info { font-size: 13px; color: var(--text-secondary); text-align: right; }
         .chart-container { width: 100%; height: 60px; }
         .btn-weight-update { width: 100%; padding: 12px; margin-top: 15px; background: #f0f0f0; color: var(--text-main); border-radius: 12px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; }
+        
         .section-header { margin-bottom: 10px; }
         .section-title { font-weight: 600; font-size: 17px; }
         .food-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; align-items: center; }
@@ -56,6 +60,7 @@
         .food-icon { font-size: 22px; width: 30px; text-align: center; }
         .food-name { font-weight: 500; font-size: 16px; }
         .food-kcal { color: var(--text-secondary); font-size: 14px; font-weight: 500; }
+        
         .btn-outline { width: 100%; padding: 14px; background: transparent; color: var(--accent-blue); border-radius: 16px; border: 2px solid rgba(51, 144, 236, 0.2); font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
         
         /* Modal */
@@ -65,12 +70,6 @@
         .modal-btns { display: flex; gap: 10px; }
         .btn-cancel { background: #f0f0f0; color: #000; flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 600; }
         .btn-save { background: var(--accent-blue); color: #fff; flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 600; }
-        
-        /* Nav */
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 0 25px 0; border-top: 1px solid #e5e5e5; z-index: 100; }
-        .nav-item { text-align: center; color: var(--text-secondary); font-size: 10px; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .nav-item.active { color: var(--accent-blue); }
-        .nav-icon { font-size: 22px; }
         
         /* ERROR SCREEN */
         #error-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
@@ -82,15 +81,13 @@
     <div id="error-screen">
         <div style="font-size: 50px; margin-bottom: 20px;">🦖</div>
         <h2 style="margin-bottom: 10px;">Запустите через чат</h2>
-        <p style="color:#8e8e93; font-size:15px; margin-bottom:20px;">Чтобы увидеть ваши данные, откройте приложение через кнопку внутри чата с ботом.</p>
+        <p style="color:#8e8e93; font-size:15px; margin-bottom:20px;">Чтобы увидеть данные, откройте приложение через кнопку внутри чата с ботом.</p>
         <button class="btn-outline" onclick="Telegram.WebApp.close()">Закрыть</button>
     </div>
 
     <div id="main-content">
-        
-        <!-- HEADER ЗДЕСЬ УДАЛЕН -->
-
         <div class="container">
+            <!-- 1. Calories -->
             <div class="card">
                 <div class="calories-grid">
                     <div class="progress-circle">
@@ -111,8 +108,10 @@
                 </div>
             </div>
 
+            <!-- 2. Scan Button -->
             <button class="scan-btn" onclick="triggerScan()">📷 Сканировать еду</button>
 
+            <!-- 3. Water -->
             <div class="card">
                 <div class="water-header">
                     <div class="water-title">💧 Вода</div>
@@ -124,6 +123,7 @@
                 </div>
             </div>
 
+            <!-- 4. Weight -->
             <div class="card">
                 <div class="weight-header">
                     <div style="font-weight: 600; font-size: 17px;">⚖️ Вес</div>
@@ -136,6 +136,7 @@
                 <button class="btn-weight-update" onclick="openWeightModal()">Обновить вес</button>
             </div>
 
+            <!-- 5. Food List -->
             <div class="card">
                 <div class="section-header"><div class="section-title">🍽 Сегодня съедено</div></div>
                 <div id="food-list-container">
@@ -143,6 +144,7 @@
                 </div>
             </div>
 
+            <!-- 6. Bottom Actions -->
             <div class="card">
                 <div class="section-header"><div class="section-title">📅 Действия</div></div>
                 <button class="btn-outline" onclick="triggerMenu()">Составить меню на завтра</button>
@@ -150,6 +152,7 @@
             </div>
         </div>
 
+        <!-- Weight Popup -->
         <div id="weightModal" class="modal">
             <div class="modal-content">
                 <h3>Ваш вес (кг)</h3>
@@ -160,19 +163,13 @@
                 </div>
             </div>
         </div>
-
-        <div class="nav-bar">
-            <div class="nav-item active"><span class="nav-icon">🏠</span>Сегодня</div>
-            <div class="nav-item"><span class="nav-icon">🕒</span>История</div>
-            <div class="nav-item"><span class="nav-icon">📊</span>Аналитика</div>
-            <div class="nav-item"><span class="nav-icon">👤</span>Профиль</div>
-        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.setHeaderColor('#f4f7f9'); tg.setBackgroundColor('#f4f7f9');
+        tg.setHeaderColor('#f4f7f9'); 
+        tg.setBackgroundColor('#f4f7f9');
 
         const params = new URLSearchParams(window.location.search);
         
@@ -229,8 +226,7 @@
                     labels: weightHistory.map(w => w.d),
                     datasets: [{
                         data: weightHistory.map(w => w.w),
-                        borderColor: '#3390ec', borderWidth: 2,
-                        pointRadius: 0, pointHoverRadius: 4, fill: false, tension: 0.4
+                        borderColor: '#3390ec', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.4
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, layout: { padding: 5 } }
@@ -238,8 +234,10 @@
         }
 
         const listContainer = document.getElementById('food-list-container');
-        if (mealsHistory.length > 0) {
-            listContainer.innerHTML = '';
+        listContainer.innerHTML = '';
+        if (mealsHistory.length === 0) {
+            listContainer.innerHTML = '<div class="food-item" style="color:#ccc;justify-content:center;">Список пуст</div>';
+        } else {
             const icons = ['🥩', '🥗', '🍎', '🥘', '🍲', '🥖', '🍳', '🥛']; 
             mealsHistory.forEach(item => {
                 const div = document.createElement('div');
@@ -251,15 +249,15 @@
         }
 
         function addWater(amount) {
-            tg.HapticFeedback.impactOccurred('light');
+            try { tg.HapticFeedback.impactOccurred('light'); } catch(e){}
             tg.sendData(`add_water_${amount}`);
             let current = parseInt(document.getElementById('water-val').innerText);
             document.getElementById('water-val').innerText = (current + amount) + " мл";
         }
 
-        function triggerScan() { tg.HapticFeedback.impactOccurred('medium'); tg.sendData("scan_food"); }
-        function triggerMenu() { tg.HapticFeedback.impactOccurred('medium'); tg.sendData("get_menu"); }
-        function triggerPDF() { tg.HapticFeedback.notificationOccurred('success'); tg.sendData("generate_pdf"); }
+        function triggerScan() { try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} tg.sendData("scan_food"); }
+        function triggerMenu() { try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} tg.sendData("get_menu"); }
+        function triggerPDF() { try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){} tg.sendData("generate_pdf"); }
 
         const modal = document.getElementById('weightModal');
         const weightInput = document.getElementById('weightInput');
