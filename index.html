@@ -48,7 +48,10 @@
         .weight-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .weight-current { font-size: 22px; font-weight: 700; }
         .weight-info { font-size: 13px; color: var(--text-secondary); text-align: right; }
-        .chart-container { width: 100%; height: 60px; }
+        
+        /* Увеличили высоту для сетки */
+        .chart-container { width: 100%; height: 180px; }
+        
         .btn-weight-update { width: 100%; padding: 12px; margin-top: 15px; background: #f0f0f0; color: var(--text-main); border-radius: 12px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; }
         
         .section-header { margin-bottom: 10px; }
@@ -60,15 +63,10 @@
         .food-name { font-weight: 500; font-size: 16px; }
         .food-kcal { color: var(--text-secondary); font-size: 14px; font-weight: 500; }
         
-        /* КНОПКА ИСТОРИИ (Внутри блока еды) */
-        .btn-history {
-            width: 100%; padding: 12px; margin-top: 5px;
-            background: transparent; color: var(--accent-blue);
-            border: none; font-size: 15px; font-weight: 600; cursor: pointer;
-        }
-
         .btn-outline { width: 100%; padding: 14px; background: transparent; color: var(--accent-blue); border-radius: 16px; border: 2px solid rgba(51, 144, 236, 0.2); font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
         
+        .btn-history { width: 100%; padding: 12px; margin-top: 5px; background: transparent; color: var(--accent-blue); border: none; font-size: 15px; font-weight: 600; cursor: pointer; }
+
         /* Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
         .modal-content { background-color: #fff; padding: 25px; border-radius: 20px; width: 80%; max-width: 300px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
@@ -142,13 +140,12 @@
                 <button class="btn-weight-update" onclick="openWeightModal()">Обновить вес</button>
             </div>
 
-            <!-- 5. Food List + History Button -->
+            <!-- 5. Food List -->
             <div class="card">
                 <div class="section-header"><div class="section-title">🍽 Сегодня съедено</div></div>
                 <div id="food-list-container">
                     <div class="food-item" style="color: #ccc; justify-content: center;">Список пуст</div>
                 </div>
-                <!-- КНОПКА ИСТОРИИ -->
                 <button class="btn-history" onclick="triggerHistory()">📜 Вся история</button>
             </div>
 
@@ -226,6 +223,7 @@
             }
         }
 
+        // ОБНОВЛЕННЫЙ ГРАФИК С СЕТКОЙ
         if (weightHistory.length > 0) {
             new Chart(document.getElementById('weightChart').getContext('2d'), {
                 type: 'line',
@@ -233,11 +231,25 @@
                     labels: weightHistory.map(w => w.d),
                     datasets: [{
                         data: weightHistory.map(w => w.w),
-                        borderColor: '#3390ec', borderWidth: 2,
-                        pointRadius: 0, pointHoverRadius: 4, fill: false, tension: 0.4
+                        borderColor: '#3390ec', 
+                        borderWidth: 2, 
+                        pointRadius: 3, // Точки теперь видны
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#3390ec',
+                        fill: false, 
+                        tension: 0.4
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } }, layout: { padding: 5 } }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { display: false } }, 
+                    scales: { 
+                        x: { display: true, grid: { display: false }, ticks: { color: '#aaa', font: {size: 10} } }, // Даты
+                        y: { display: true, grid: { color: '#f0f0f0' }, ticks: { color: '#aaa', font: {size: 10} } } // Сетка веса
+                    }, 
+                    layout: { padding: 5 } 
+                }
             });
         }
 
@@ -252,6 +264,8 @@
                 div.innerHTML = `<div class="food-info"><span class="food-icon">${icon}</span><span class="food-name">${item.n}</span></div><div class="food-kcal">${item.c} ккал</div>`;
                 listContainer.appendChild(div);
             });
+        } else {
+            listContainer.innerHTML = '<div class="food-item" style="color:#ccc;justify-content:center;">Список пуст</div>';
         }
 
         function addWater(amount) {
@@ -264,12 +278,7 @@
         function triggerScan() { try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} tg.sendData("scan_food"); }
         function triggerMenu() { try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} tg.sendData("get_menu"); }
         function triggerPDF() { try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){} tg.sendData("generate_pdf"); }
-        
-        // НОВАЯ КНОПКА ИСТОРИИ
-        function triggerHistory() { 
-            try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} 
-            tg.sendData("get_history"); 
-        }
+        function triggerHistory() { try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){} tg.sendData("get_history"); }
 
         const modal = document.getElementById('weightModal');
         const weightInput = document.getElementById('weightInput');
