@@ -271,8 +271,8 @@
 
         let weightHistory = [], mealsHistory = [];
         try {
-            weightHistory = JSON.parse(decodeURIComponent(params.get('weights'))) || [];
-            mealsHistory = JSON.parse(decodeURIComponent(params.get('meals'))) || [];
+            weightHistory = JSON.parse(params.get('weights')) || [];
+            mealsHistory = JSON.parse(params.get('meals')) || [];
         } catch (e) {}
 
         // Инициализация
@@ -331,7 +331,10 @@
                 const div = document.createElement('div');
                 div.className = 'food-item';
                 const icon = icons[Math.floor(Math.random() * icons.length)];
-                div.innerHTML = `<div class="food-info"><span class="food-icon">${icon}</span><span class="food-name">${item.n}</span></div><div class="food-kcal">${item.c} ккал</div>`;
+                div.innerHTML = `<div class="food-info"><span class="food-icon"></span><span class="food-name"></span></div><div class="food-kcal"></div>`;
+                div.querySelector(".food-icon").textContent = icon;
+                div.querySelector(".food-name").textContent = item.n;
+                div.querySelector(".food-kcal").textContent = `${item.c} ккал`;
                 listContainer.appendChild(div);
             });
         }
